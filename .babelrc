@@ -1,0 +1,16 @@
+{
+  "plugins" : [
+    [
+      "import", [
+        { "libraryName": "antd", "style": "css" },
+        { "libraryName": "@boluome/common-lib" },
+        {
+          "libraryName": "ramda",
+          "libraryDirectory": "src",
+          "camel2DashComponentName": false
+        },
+      ]
+    ],
+  ],
+  "presets": ["es2015", "stage-0", "react"]
+}
