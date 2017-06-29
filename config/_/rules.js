@@ -5,26 +5,46 @@ import { SRC_PATH, MODULE_PATH } from '../../path.config'
 //   require.resolve('antd-mobile').replace(/warn\.js$/, ''),  // 1. 属于 antd-mobile 内置 svg 文件
 // ]
 //webpack loaders
-const loader =
+const rules =
 [
   {
     test: /\.jsx?$/,
-    loader: 'happypack/loader?id=happybabel',
-    include: [ SRC_PATH, MODULE_PATH ]
+    include: [ SRC_PATH ],
+    use: [{
+      loader: 'eslint-loader'
+    }],
+    enforce: 'pre'
+  },
+  {
+    test: /\.jsx?$/,
+    include: [ SRC_PATH, MODULE_PATH ],
+    use: [{
+      loader: 'happypack/loader',
+      options: {
+        id: 'happybabel'
+      }
+    }]
   },
   {
     test: /\.(css|scss|sass)$/,
     include: [ SRC_PATH, MODULE_PATH ],
-    loader: 'happypack/loader?id=happystyle'
+    use: [{
+      loader: 'happypack/loader',
+      options: {
+        id: 'happystyle'
+      }
+    }]
   },
   {
     test: /\.(png|jpg|gif)$/,
     include: [ SRC_PATH, MODULE_PATH ],
-    loader: 'url',
-    query : {
-      limit: 1,
-      name : 'images/[name].[ext]?[hash:8]'
-    }
+    use: [{
+      loader: 'url-loader',
+      options: {
+        limit: 1,
+        name : 'images/[name].[ext]?[hash:8]'
+      }
+    }]
   },
   // {
   //   test: /\.(svg)$/i,
@@ -38,4 +58,4 @@ const loader =
   // },
 ]
 
-export default loader
+export default rules

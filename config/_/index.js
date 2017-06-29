@@ -1,7 +1,7 @@
-import loaderConfig   from './loaders'
+import ruleConfig     from './rules'
 import pluginConfig   from './plugins'
 import aliasConfig    from './alias'
-import postcssConfig  from './postcss'
+// import postcssConfig  from './postcss'
 import checkEnv       from './env'
 import { SRC_PATH } from '../../path.config'
 
@@ -16,27 +16,13 @@ const config = {
     chunkFilename: `scripts/[name].[${ hashName }].chunk.js`
   },
   plugins: pluginConfig,
-  eslint: {
-    configFile: './.eslintrc.js',
-    failOnWarning: true, // eslint报warning了就终止webpack编译
-    failOnError: true   // eslint报error了就终止webpack编译
-  },
   module : {
-    preLoaders: [
-      {
-        test: /\.jsx?$/,
-        loader: 'eslint-loader',
-        include: [ SRC_PATH ]
-      },
-    ],
-    loaders: loaderConfig,
-    noparse: [ /react/ ]
+    rules: ruleConfig
   },
   resolve: {
-    modulesDirectories: [ 'node_modules', 'src' ],
+    modules: [ 'node_modules', 'src' ],
     alias: aliasConfig
-  },
-  postcss: postcssConfig
+  }
 }
 
 export default checkEnv(config)

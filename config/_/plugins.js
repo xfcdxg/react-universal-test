@@ -3,16 +3,24 @@ import os                from 'os'
 import webpack           from 'webpack'
 import htmlWebpackPlugin from 'html-webpack-plugin'
 import extractTextPlugin from 'extract-text-webpack-plugin'
-import isomorphicPlugin  from 'webpack-isomorphic-tools/plugin'
 import happyPack         from 'happypack'
 import { ASSET_PATH }    from '../../path.config'
 
 //webpack common plugins
-const happyThreadPool = happyPack.ThreadPool({ size: os.cpus().length });
+const happyThreadPool = os.cpus().length
 const isProduction    = process.env.NODE_ENV === 'production'
 const hashName        = isProduction ? 'chunkhash:8': 'hash:8'
 
 const plugin = [
+  new webpack.LoaderOptionsPlugin({
+     options: {
+       eslint: {
+         configFile: './.eslintrc.js',
+         failOnWarning: true, // eslint报warning了就终止webpack编译
+         failOnError: true   // eslint报error了就终止webpack编译
+       }
+     }
+   }),
   new htmlWebpackPlugin({
     template: resolve(ASSET_PATH, 'index.ejs'),
     inject  : true,
@@ -27,27 +35,22 @@ const plugin = [
     serviceName: 'OTOSaaS - Lib'
   }),
   new happyPack({
+    loaders: [
+      'babel-loader'
+    ],
+    threads: happyThreadPool,
     id: 'happybabel',
-    loaders: ['babel-loader'],
-    threadPool: happyThreadPool,
     cache: true,
     verbose: true
   }),
   new happyPack({
+    loaders: [
+      'style-loader', 'css-loader', 'postcss-loader', 'sass-loader'
+    ],
+    threads: happyThreadPool,
     id: 'happystyle',
-    loaders: [ 'style', 'css', 'postcss', 'sass' ],
-    threadPool: happyThreadPool,
     cache: true,
     verbose: true
-  }),
-  new extractTextPlugin('style/[name].css', { allChunks: true }),
-  new webpack.optimize.OccurrenceOrderPlugin(),
-  new isomorphicPlugin({
-    assets: {
-      images: {
-        extensions: ['png', 'jpg', 'gif', 'ico', 'svg']
-      }
-    }
   }),
   new webpack.optimize.CommonsChunkPlugin({
     name     : 'vendor',

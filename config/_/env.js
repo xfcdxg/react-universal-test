@@ -16,9 +16,8 @@ const dev = config => {
   }
 
   config.plugins = config.plugins.concat([
-    new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin()
   ])
   return config
 }
@@ -31,7 +30,6 @@ const prod = config => {
         NODE_ENV: JSON.stringify('production')
       }
     }),
-    new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin({
       exclude:/\.min\.js$/,
       mangle:true,
