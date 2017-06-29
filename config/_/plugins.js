@@ -1,15 +1,17 @@
-import { resolve } from 'path'
-import os from 'os'
-import webpack from 'webpack'
+import { resolve }       from 'path'
+import os                from 'os'
+import webpack           from 'webpack'
 import htmlWebpackPlugin from 'html-webpack-plugin'
 import extractTextPlugin from 'extract-text-webpack-plugin'
-import happyPack from 'happypack'
+import isomorphicPlugin  from 'webpack-isomorphic-tools/plugin'
+import happyPack         from 'happypack'
 import { ASSET_PATH }    from '../../path.config'
+
 //webpack common plugins
 const happyThreadPool = happyPack.ThreadPool({ size: os.cpus().length });
-
-const hashName =  process.env.NODE_ENV === 'production' ? 'chunkhash:8': 'hash:8'
 const isProduction    = process.env.NODE_ENV === 'production'
+const hashName        = isProduction ? 'chunkhash:8': 'hash:8'
+
 const plugin = [
   new htmlWebpackPlugin({
     template: resolve(ASSET_PATH, 'index.ejs'),
@@ -40,7 +42,13 @@ const plugin = [
   }),
   new extractTextPlugin('style/[name].css', { allChunks: true }),
   new webpack.optimize.OccurrenceOrderPlugin(),
-  // new webpack.optimize.CommonsChunkPlugin('scripts/vendor.bundle.js?[chunkhash:8]')
+  new isomorphicPlugin({
+    assets: {
+      images: {
+        extensions: ['png', 'jpg', 'gif', 'ico', 'svg']
+      }
+    }
+  }),
   new webpack.optimize.CommonsChunkPlugin({
     name     : 'vendor',
     filename : `scripts/vendor.bundle.[${ hashName }].js`,
