@@ -16,8 +16,6 @@ const loader =
     test: /\.(css|scss|sass)$/,
     include: [ SRC_PATH, MODULE_PATH ],
     loader: 'happypack/loader?id=happystyle'
-    // loaders: [ 'style', 'css', 'postcss', 'sass' ]
-    // loader: extractTextPlugin.extract('style-loader', 'css-loader', 'sass-loader')
   },
   {
     test: /\.(png|jpg|gif)$/,

@@ -1,7 +1,8 @@
 import { resolve } from 'path'
 
 export const ROOT_PATH   = resolve(__dirname)
-export const SRC_PATH    = resolve(ROOT_PATH, 'src')
+export const SRC_PATH    = resolve(ROOT_PATH, 'app')
+export const CLIENT_PATH = resolve(SRC_PATH, 'client')
 export const STATIC_PATH = resolve(ROOT_PATH, 'static')
 export const SVC_PATH    = resolve(SRC_PATH , 'services')
 export const DIST_PATH   = resolve(ROOT_PATH, 'dist')

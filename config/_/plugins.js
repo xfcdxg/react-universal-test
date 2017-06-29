@@ -21,6 +21,7 @@ const plugin = [
       minifyJS          : true
     },
     isProduction,
+    reactComponent: '',
     serviceName: 'OTOSaaS - Lib'
   }),
   new happyPack({

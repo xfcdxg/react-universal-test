@@ -1,5 +1,5 @@
 import webpack from 'webpack'
-// import appCachePlugin from 'appcache-webpack-plugin'
+import { PORT } from '../../server.config'
 
 const checkEnv = config => process.env.NODE_ENV === 'production' ? prod(config) : dev(config)
 
@@ -8,7 +8,7 @@ export default checkEnv
 //测试环境config处理
 const dev = config => {
   config.devServer = {
-    port  : '9021',
+    port  : PORT,
     host  : '0.0.0.0',
     hot   : true,
     inline: true,
@@ -42,14 +42,6 @@ const prod = config => {
         warnings: false
       }
     })
-    // new appCachePlugin({
-    //   cache: ['bundle.js', 'vendor.bundle.js'],
-    //   network: ['*'],  // No network access allowed!
-    //   fallback: ['index.html'],
-    //   settings: [],
-    //   exclude: [],  // Exclude file.txt and all .js files
-    //   output: 'manifest.appcache'
-    // })
   ])
   return config
 }
