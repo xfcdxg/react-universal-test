@@ -13,14 +13,14 @@ const hashName        = isProduction ? 'chunkhash:8': 'hash:8'
 
 const plugin = [
   new webpack.LoaderOptionsPlugin({
-     options: {
-       eslint: {
-         configFile: './.eslintrc.js',
-         failOnWarning: true, // eslint报warning了就终止webpack编译
-         failOnError: true   // eslint报error了就终止webpack编译
-       }
-     }
-   }),
+    options: {
+      eslint: {
+        configFile: './.eslintrc.js',
+        failOnWarning: true, // eslint报warning了就终止webpack编译
+        failOnError: true   // eslint报error了就终止webpack编译
+      }
+    }
+  }),
   new htmlWebpackPlugin({
     template: resolve(ASSET_PATH, 'index.ejs'),
     inject  : true,
