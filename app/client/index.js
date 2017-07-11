@@ -1,3 +1,5 @@
+import 'isomorphic-fetch'
+import 'es6-promise'
 import React        from 'react'
 import { render }   from 'react-dom'
 import { Provider } from 'react-redux'

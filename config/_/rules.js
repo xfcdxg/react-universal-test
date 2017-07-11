@@ -17,7 +17,7 @@ const rules =
   },
   {
     test: /\.jsx?$/,
-    include: [ SRC_PATH, MODULE_PATH ],
+    include: [ SRC_PATH ],
     use: [{
       loader: 'happypack/loader',
       options: {

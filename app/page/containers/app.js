@@ -1,13 +1,20 @@
 import { connect } from 'react-redux'
 import wrap        from '../common/wrap'
 import App         from '../components/app'
+import { fetchName }   from '../actions'
 
-const mapStateToProps = ({ app }) => ({ ...app })
+const mapStateToProps = ({ app }) => {
+  return {
+    ...app,
+  }
+}
 
 const mapDispatchToProps = dispatch => ({ dispatch })
 
-const mapFunToComponent  = () => ({
-  componentDidMount: () => console.log('root mounted'),
+const mapFunToComponent  = dispatch => ({
+  componentWillMount: () => {
+    dispatch(fetchName())
+  },
 })
 
 export default

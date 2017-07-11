@@ -10,7 +10,14 @@
       Universal Test
     </title>
   </head>
-  <body>
-    <div id='root'></div>
+  <body style='margin: 0'>
+    <div id='root'><% if (typeof reactComponent !== 'undefined') { %><%- reactComponent %><% } %></div>
+    <script>window.__INITIAL_STATE__ = <% if (typeof initialState !== 'undefined') { %><%- initialState %><% } %></script>
+    <% if (typeof vandorBundleJs != 'undefined') { %>
+      <script src='<%- publicPath %><%- vandorBundleJs %>'></script>
+    <% } %>
+    <% if (typeof bundleJs != 'undefined') { %>
+      <script src='<%- publicPath %><%- bundleJs %>'></script>
+    <% } %>
   </body>
 </html>

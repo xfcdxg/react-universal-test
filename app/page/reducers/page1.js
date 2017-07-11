@@ -1,13 +1,11 @@
 import mergeState from '../common/merge-state'
 
-const initialState = {
-  name: '',
-}
+const initialState = {}
 
 export default (
   (state = initialState, action) => {
     switch (action.type) {
-      case 'CHANGE_NAME':
+      case 'FETCH_LIST_SUCCESS':
         return mergeState(state, action)
       default: return state
     }

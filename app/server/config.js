@@ -12,8 +12,23 @@ import webpackConfig             from '../../webpack.config.babel'
 import routes                    from '../page/routes'
 import { defineApi }             from './api'
 import createStore               from '../page/store'
-import { SERVER_PATH }           from '../../path.config'
+import { ASSET_PATH, DIST_PATH } from '../../path.config'
+import fetchDataBeforeRender     from '../page/common/fetchDataBeforeRender'
 
+const compiler = webpack(webpackConfig)
+const { publicPath } = webpackConfig.output
+
+let compiledBundle = []
+
+compiler.plugin('compilation', (compilation, callback) => {
+  compilation.plugin('after-optimize-assets', assets => {
+    const keys = Object.keys(assets).filter(o => o.indexOf('.json') < 0)
+    if (keys.length > 1) {
+      console.log('assets', keys)
+      compiledBundle = keys
+    }
+  })
+})
 export const configServer = () =>
 compose(
   matchPageRoute,
@@ -27,39 +42,48 @@ const configViewEngine = server => {
   server.set('view engine', 'html')
   return server
 }
+// 配置 webpack
 const configWebpack = server => {
   if (process.env.NODE_ENV !== 'production') {
-    const compiler = webpack(webpackConfig)
-    server.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: webpackConfig.output.publicPath }))
+    server.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath }))
     server.use(webpackHotMiddleware(compiler))
-  }else{
-    server.use('/static', express.static(__dirname + '/../../dist'));
+  } else {
+    server.use('/', express.static(DIST_PATH));
   }
   return server
 }
 const matchPageRoute = server => {
+
   server.use((req, res) => {
+    // console.log(compiler)
     match({ routes, location: req.url }, (err, redirectLocation, renderProps) => {
       if (err) {
-        res.status(500).end(`Internal Server Error ${err}`);
+        res.status(500).end(`Internal Server Error ${ err }`)
       } else if (redirectLocation) {
         const { pathname, search } = redirectLocation
-        res.redirect(`${ pathname }${ search }`);
+        res.redirect(`${ pathname }${ search }`)
       } else if (renderProps) {
         const store = createStore()
         const state = store.getState()
+        const { components, params } = renderProps
         const reactComponent = renderToString(
           <Provider store={store}>
             <RouterContext { ...renderProps } />
           </Provider>
         )
-        // 未完成
-        res.render(`${ SERVER_PATH }/view/index.ejs`, {
-          reactComponent,
-          initialState: store.getState()
+        const [bundleJs = '', vandorBundleJs = ''] = compiledBundle
+        fetchDataBeforeRender(store.dispatch, components, params)
+        .then(() => {
+          res.render(`${ ASSET_PATH }/index.ejs`, {
+            reactComponent,
+            initialState: JSON.stringify(store.getState()),
+            bundleJs,
+            vandorBundleJs,
+            publicPath
+          })
         })
       } else {
-        res.status(404).end('Not found');
+        res.status(404).end('Not found')
       }
     })
   })
