@@ -24,7 +24,7 @@ compiler.plugin('compilation', (compilation, callback) => {
   compilation.plugin('after-optimize-assets', assets => {
     const keys = Object.keys(assets).filter(o => o.indexOf('.json') < 0)
     if (keys.length > 1) {
-      console.log('assets', keys)
+      // console.log('assets', keys)
       compiledBundle = keys
     }
   })
@@ -32,8 +32,8 @@ compiler.plugin('compilation', (compilation, callback) => {
 export const configServer = () =>
 compose(
   matchPageRoute,
-  configWebpack,
   defineApi,
+  configWebpack,
   configViewEngine
 )(express())
 // 使用ejs模板引擎解析html视图文件

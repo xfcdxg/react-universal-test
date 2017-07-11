@@ -1,8 +1,6 @@
 import { configServer } from './config'
 import { PORT } from '../../server.config'
 
-const server = configServer()
-
-server.listen(PORT, () => {
+configServer().listen(PORT, () => {
   console.log('server run at %s', PORT)
 })
